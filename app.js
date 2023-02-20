@@ -12,7 +12,7 @@ var ageHours = document.getElementById("ageHours");
 var ageSeconds = document.getElementById("ageSeconds");
 var ageMiliSeconds = document.getElementById("ageMiliSeconds");
 
-window.addEventListener("load", function () {
+setInterval(function () {
   var options = { year: "numeric", month: "long", day: "numeric" };
   var selectedDate = new Date(datePicker.value);
   var DOB = selectedDate.toLocaleDateString("en-US", options);
