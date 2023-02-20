@@ -12,44 +12,68 @@ var ageHours = document.getElementById("ageHours");
 var ageMinutes = document.getElementById("ageMinutes");
 var ageSeconds = document.getElementById("ageSeconds");
 
-setInterval(function () {
-  const today = new Date();
-  const birthDate = new Date(datePicker.value);
+document.addEventListener("DOMContentLoaded", function () {
+  // code to be executed when the document is ready
+  calcTimer();
+});
+
+function calcTimer() {
+  today = new Date();
+  timeobj = new Date(datePicker.value);
 
   var options = { year: "numeric", month: "long", day: "numeric" };
-  var DOB = birthDate.toLocaleDateString("en-US", options);
+  var DOB = timeobj.toLocaleDateString("en-US", options);
   choseDate.innerHTML = "DOB : " + " " + DOB;
 
-  // NOW START THE CALCULATION
+  const vy = timeobj.getFullYear();
+  const vm = timeobj.getMonth();
+  const vd = timeobj.getDate();
+  const vh = 0;
+  const vi = 0;
 
-  let year = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < birthDate.getDate())
-  ) {
-    year--;
+  chkdate = new Date(today.getFullYear(), vm, vd, vh, vi, 0);
+  if (chkdate < today) {
+    last = new Date(today.getFullYear(), vm, vd, vh, vi, 0);
+    next = new Date(today.getFullYear() + 1, vm, vd, vh, vi, 0);
+  } else {
+    last = new Date(today.getFullYear() - 1, vm, vd, vh, vi, 0);
+    next = new Date(today.getFullYear(), vm, vd, vh, vi, 0);
   }
-  const month = (today.getMonth() + 12 - birthDate.getMonth()) % 12;
-  const dayDiff = today.getDate() - birthDate.getDate();
-  const day = dayDiff < 0 ? dayDiff + 30 : dayDiff;
-
-  const diffMs = today.getTime() - birthDate.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const sec = diffSec % 60;
-  const diffMin = Math.floor(diffSec / 60);
-  const min = diffMin % 60;
-  const diffHrs = Math.floor(diffMin / 60);
-  const hrs = diffHrs % 24;
+  as = parseInt((today - timeobj) / 1000);
+  ay = as / 31556952;
+  am = ay * 12;
+  aw = ay * 52.1775;
+  ad = ay * 365.2425;
+  ah = ay * 8765.82;
+  ai = ay * 525949.2;
+  cy = last.getFullYear() - timeobj.getFullYear();
+  cs = parseInt((today - last) / 1000);
+  cd = Math.floor(cs / 86400);
+  cs = cs - cd * 86400;
+  cm = Math.floor(cd / 30.436875);
+  cd = cd - Math.floor(cm * 30.436875);
+  ch = Math.floor(cs / 3600);
+  cs = cs - ch * 3600;
+  ci = Math.floor(cs / 60);
+  cs = cs - ci * 60;
+  ns = parseInt((next - today) / 1000);
+  nd = Math.floor(ns / 86400);
+  ns = ns - nd * 86400;
+  nh = Math.floor(ns / 3600);
+  ns = ns - nh * 3600;
+  ni = Math.floor(ns / 60);
+  ns = ns - ni * 60;
 
   // Now it is time to print values in boxes
 
-  ageYear.innerHTML = year;
-  ageMonth.innerHTML = month;
-  ageDays.innerHTML = day;
-  ageHours.innerHTML = hrs;
-  ageMinutes.innerHTML = min;
-  ageSeconds.innerHTML = sec;
+  ageYear.innerHTML = cy;
+  ageMonth.innerHTML = cm;
+  ageDays.innerHTML = cd;
+  ageHours.innerHTML = ch;
+  ageMinutes.innerHTML = ci;
+  ageSeconds.innerHTML = cs;
 
   document.querySelector(".age-calc").classList.add("expand");
-});
+
+  t = setTimeout("calcTimer()", 1000);
+}
